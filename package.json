@@ -1,6 +1,6 @@
 {
   "name": "axios-apicloud-adapter",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "axios 的 apicloud 适配器，以便于在 app 中使用原生网络请求库",
   "main": "index.js",
   "scripts": {
