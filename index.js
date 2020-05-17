@@ -8,9 +8,11 @@ import createError from 'axios/lib/core/createError'
 const transformConfig = (config) => {
   const fullPath = buildFullPath(config.baseURL, config.url)
   const url = buildURL(fullPath, config.params, config.paramsSerializer)
-  return {
+
+  const params = {
     url,
     method: config.method,
+    data: {},
     encode: config.encode,
     tag: config.tag,
     cache: config.cache,
@@ -19,12 +21,30 @@ const transformConfig = (config) => {
     charset: config.charset,
     headers: config.headers,
     report: config.report,
-    data: config.data,
     certificate: config.certificate,
     safeMode: config.safeMode,
     proxy: config.proxy,
     returnAll: true
   }
+
+  const dataType = config.data.toString()
+
+  if (dataType === '[object FormData]') {
+    params.data.values = {}
+    params.data.files = {}
+    for (const data of config.data) {
+      const [key, value] = data
+      if (value.toString() === '[object File]') {
+        params.data.files[key] = value
+      } else {
+        params.data.values[key] = value
+      }
+    }
+  } else {
+    params.data.body = config.data
+  }
+
+  return params
 }
 
 const transformResponse = (rst, config) => {
