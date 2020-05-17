@@ -1,4 +1,5 @@
 import axios from 'axios'
+import utils from 'axios/lib/utils'
 import settle from 'axios/lib/core/settle'
 import httpAdapter from 'axios/lib/adapters/http'
 import buildURL from 'axios/lib/helpers/buildURL'
@@ -14,11 +15,11 @@ const transformConfig = (config) => {
     method: config.method,
     data: {},
     encode: config.encode,
-    tag: config.tag,
+    tag: config.cancelToken,
     cache: config.cache,
     timeout: config.timeout,
-    dataType: config.dataType,
-    charset: config.charset,
+    dataType: config.responseType,
+    charset: config.responseEncoding,
     headers: config.headers,
     report: config.report,
     certificate: config.certificate,
@@ -27,14 +28,12 @@ const transformConfig = (config) => {
     returnAll: true
   }
 
-  const dataType = config.data.toString()
-
-  if (dataType === '[object FormData]') {
+  if (utils.isFormData(config.data)) {
     params.data.values = {}
     params.data.files = {}
     for (const data of config.data) {
       const [key, value] = data
-      if (value.toString() === '[object File]') {
+      if (utils.isFile(value)) {
         params.data.files[key] = value
       } else {
         params.data.values[key] = value
@@ -96,5 +95,15 @@ export default (config) => {
       const response = transformResponse(ret, config)
       settle(resolve, reject, response)
     })
+
+    if (config.cancelToken) {
+      // Handle cancellation
+      config.cancelToken.promise.then((cancel) => {
+        window.api.cancelAjax({
+          tag: config.cancelToken
+        })
+        reject(cancel)
+      })
+    }
   })
 }
