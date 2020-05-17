@@ -69,13 +69,19 @@ const transformResponse = (rst, config) => {
 }
 
 const transformError = (error, reject, config) => {
-  const { code } = error
-  if (code === 1) {
-    // timeout
-    reject(createError('timeout of ' + config.timeout + 'ms exceeded', config, 'ECONNABORTED', ''))
+  const { code, msg } = error
+  if (code === 0) {
+    reject(createError('连接错误', config, msg))
+  } else if (code === 1) {
+    reject(createError('超出 ' + config.timeout + 'ms 的超时限制', config, 'ECONNABORTED', ''))
+  } else if (code === 2) {
+    reject(createError('授权错误', config, msg))
+  } else if (code === 3) {
+    reject(createError('数据类型错误', config, msg))
+  } else if (code === 4) {
+    reject(createError('不安全的数据', config, msg))
   } else {
-    // NetWordError
-    reject(createError('Network Error', config, null, ''))
+    reject(createError('网络错误', config, null, ''))
   }
 }
 
