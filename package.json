@@ -1,0 +1,24 @@
+{
+  "name": "axios-apicloud-adapter",
+  "version": "0.0.1",
+  "description": "axios 的 apicloud 适配器，以便于在 app 中使用原生网络请求库",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/F-loat/axios-apicloud-adapter.git"
+  },
+  "keywords": [
+    "axios",
+    "apicloud",
+    "adapter"
+  ],
+  "author": "F-loat <chaimaoyuan@foxmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/F-loat/axios-apicloud-adapter/issues"
+  },
+  "homepage": "https://github.com/F-loat/axios-apicloud-adapter#readme"
+}
