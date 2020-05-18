@@ -2,8 +2,11 @@
   "name": "axios-apicloud-adapter",
   "version": "0.1.0",
   "description": "axios 的 apicloud 适配器，以便于在 app 中使用原生网络请求库",
-  "main": "index.js",
+  "main": "dist/index.js",
+  "jsnext:main": "src/index.js",
+  "module": "src/index.js",
   "scripts": {
+    "build": "babel src/index.js --out-dir dist --presets=@babel/env",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -20,5 +23,13 @@
   "bugs": {
     "url": "https://github.com/F-loat/axios-apicloud-adapter/issues"
   },
-  "homepage": "https://github.com/F-loat/axios-apicloud-adapter#readme"
+  "homepage": "https://github.com/F-loat/axios-apicloud-adapter#readme",
+  "dependencies": {
+    "axios": "^0.19.2"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.8.4",
+    "@babel/core": "^7.9.6",
+    "@babel/preset-env": "^7.9.6"
+  }
 }
