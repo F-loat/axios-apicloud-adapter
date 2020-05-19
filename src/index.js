@@ -1,7 +1,7 @@
 import axios from 'axios'
 import utils from 'axios/lib/utils'
 import settle from 'axios/lib/core/settle'
-import httpAdapter from 'axios/lib/adapters/http'
+import xhrAdapter from 'axios/lib/adapters/xhr'
 import buildURL from 'axios/lib/helpers/buildURL'
 import buildFullPath from 'axios/lib/core/buildFullPath'
 import createError from 'axios/lib/core/createError'
@@ -18,7 +18,7 @@ const transformConfig = (config) => {
     tag: config.cancelToken,
     cache: config.cache,
     timeout: config.timeout,
-    dataType: config.responseType,
+    dataType: config.responseType || 'text',
     charset: config.responseEncoding,
     headers: config.headers,
     report: config.report,
@@ -86,12 +86,15 @@ const transformError = (error, reject, config) => {
 
 export default (config) => {
   if (!window.api) {
-    return axios({ ...config, adapter: httpAdapter })
+    return axios({ ...config, adapter: xhrAdapter })
   }
   return new Promise((resolve, reject) => {
     const ajaxParams = transformConfig(config)
     window.api.ajax(ajaxParams, (ret, err) => {
-      if (err) transformError(err, reject, config)
+      if (err) {
+        transformError(err, reject, config)
+        return
+      }
       const response = transformResponse(ret, config)
       settle(resolve, reject, response)
     })
