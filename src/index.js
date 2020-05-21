@@ -28,10 +28,9 @@ const file2Base64 = (file) => {
   })
 }
 
-const file2path = async ([key, file]) => {
+const file2path = async (file) => {
   const base64 = await file2Base64(file)
-  const path = await writeFile({ path: `cache://${file.name}`, data: base64 })
-  return { key, path }
+  return writeFile({ path: `cache://${file.name}`, data: base64 })
 }
 
 const transformConfig = async (config) => {
@@ -57,23 +56,18 @@ const transformConfig = async (config) => {
   }
 
   if (utils.isFormData(config.data)) {
-    const fileQueue = []
     params.data.values = {}
+    params.data.files = {}
 
     for (const data of config.data) {
       const [key, value] = data
       if (utils.isFile(value)) {
-        fileQueue.push(file2path(data))
+        const filePath = await file2path(value)
+        params.data.files[key] = filePath
       } else {
         params.data.values[key] = value
       }
     }
-
-    const files = await Promise.all(fileQueue)
-
-    params.data.files = files.reduce((result, current) => {
-      return { ...result, [current.key]: current.path }
-    }, {})
 
     delete params.headers['Content-Type']
   } else {
