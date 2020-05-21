@@ -19,6 +19,7 @@ axios.defaults.adapter = apicloudAdapter
 ## 特性
 
  * 通过 `window.api` 检测运行环境，自动切换适配器
+ * 文件上传通过 Base64 编码文件后实现，需后端配合做相关处理
 
 ## 参考
 
