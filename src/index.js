@@ -6,7 +6,29 @@ import buildURL from 'axios/lib/helpers/buildURL'
 import buildFullPath from 'axios/lib/core/buildFullPath'
 import createError from 'axios/lib/core/createError'
 
-const transformConfig = (config) => {
+const writeFile = ({ path, data }) => {
+  return new Promise((resolve, reject) => {
+    window.api.writeFile({ path, data }, (ret, err) => {
+      if (ret.status) {
+        resolve(path)
+      } else {
+        reject(err)
+      }
+    })
+  })
+}
+
+const file2Base64 = (file) => {
+  return new Promise((resolve) => {
+    const reader = new FileReader()
+    reader.readAsDataURL(file)
+    reader.onload = () => {
+      resolve(reader.result)
+    }
+  })
+}
+
+const transformConfig = async (config) => {
   const fullPath = buildFullPath(config.baseURL, config.url)
   const url = buildURL(fullPath, config.params, config.paramsSerializer)
 
@@ -31,10 +53,12 @@ const transformConfig = (config) => {
   if (utils.isFormData(config.data)) {
     params.data.values = {}
     params.data.files = {}
-    for (const data of config.data) {
+    for await (const data of config.data) {
       const [key, value] = data
       if (utils.isFile(value)) {
-        params.data.files[key] = value
+        const base64Data = await file2Base64(value)
+        const path = await writeFile({ path: `cache://${value.name}`, data: base64Data })
+        params.data.files[key] = path
       } else {
         params.data.values[key] = value
       }
@@ -88,8 +112,8 @@ export default (config) => {
   if (!window.api) {
     return axios({ ...config, adapter: xhrAdapter })
   }
-  return new Promise((resolve, reject) => {
-    const ajaxParams = transformConfig(config)
+  return new Promise(async (resolve, reject) => {
+    const ajaxParams = await transformConfig(config)
     window.api.ajax(ajaxParams, (ret, err) => {
       if (err) {
         transformError(err, reject, config)
