@@ -28,11 +28,10 @@ const file2Base64 = (file) => {
   })
 }
 
-const file2path = async (file) => {
-  const { name } = file
+const file2path = async ([key, file]) => {
   const base64 = await file2Base64(file)
-  const path = await writeFile({ path: `cache://${name}`, data: base64 })
-  return { name, path }
+  const path = await writeFile({ path: `cache://${file.name}`, data: base64 })
+  return { key, path }
 }
 
 const transformConfig = async (config) => {
@@ -64,7 +63,7 @@ const transformConfig = async (config) => {
     for (const data of config.data) {
       const [key, value] = data
       if (utils.isFile(value)) {
-        fileQueue.push(file2path(value))
+        fileQueue.push(file2path(data))
       } else {
         params.data.values[key] = value
       }
@@ -73,7 +72,7 @@ const transformConfig = async (config) => {
     const files = await Promise.all(fileQueue)
 
     params.data.files = files.reduce((result, current) => {
-      return { ...result, [current.name]: current.path }
+      return { ...result, [current.key]: current.path }
     }, {})
 
     delete params.headers['Content-Type']
