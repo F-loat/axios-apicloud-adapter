@@ -21,29 +21,29 @@ var _createError = _interopRequireDefault(require("axios/lib/core/createError"))
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
+function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
+
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _iterableToArrayLimit(arr, i) { if (typeof Symbol === "undefined" || !(Symbol.iterator in Object(arr))) return; var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
+
+function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
 
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
-function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
-
-function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+function _createForOfIteratorHelper(o) { if (typeof Symbol === "undefined" || o[Symbol.iterator] == null) { if (Array.isArray(o) || (o = _unsupportedIterableToArray(o))) { var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e2) { throw _e2; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var it, normalCompletion = true, didErr = false, err; return { s: function s() { it = o[Symbol.iterator](); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e3) { didErr = true; err = _e3; }, f: function f() { try { if (!normalCompletion && it["return"] != null) it["return"](); } finally { if (didErr) throw err; } } }; }
 
 function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
 
 function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
 
-function _iterableToArrayLimit(arr, i) { if (typeof Symbol === "undefined" || !(Symbol.iterator in Object(arr))) return; var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
-
-function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
-
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
 
 function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
-
-function _asyncIterator(iterable) { var method; if (typeof Symbol !== "undefined") { if (Symbol.asyncIterator) { method = iterable[Symbol.asyncIterator]; if (method != null) return method.call(iterable); } if (Symbol.iterator) { method = iterable[Symbol.iterator]; if (method != null) return method.call(iterable); } } throw new TypeError("Object is not async iterable"); }
 
 var writeFile = function writeFile(_ref) {
   var path = _ref.path,
@@ -73,13 +73,52 @@ var file2Base64 = function file2Base64(file) {
   });
 };
 
-var transformConfig = /*#__PURE__*/function () {
-  var _ref2 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(config) {
-    var fullPath, url, params, _iteratorNormalCompletion, _didIteratorError, _iteratorError, _iterator, _step, _value, data, _data, key, value, base64Data, path;
-
+var file2path = /*#__PURE__*/function () {
+  var _ref2 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(file) {
+    var name, base64, path;
     return regeneratorRuntime.wrap(function _callee$(_context) {
       while (1) {
         switch (_context.prev = _context.next) {
+          case 0:
+            name = file.name;
+            _context.next = 3;
+            return file2Base64(file);
+
+          case 3:
+            base64 = _context.sent;
+            _context.next = 6;
+            return writeFile({
+              path: "cache://".concat(name),
+              data: base64
+            });
+
+          case 6:
+            path = _context.sent;
+            return _context.abrupt("return", {
+              name: name,
+              path: path
+            });
+
+          case 8:
+          case "end":
+            return _context.stop();
+        }
+      }
+    }, _callee);
+  }));
+
+  return function file2path(_x) {
+    return _ref2.apply(this, arguments);
+  };
+}();
+
+var transformConfig = /*#__PURE__*/function () {
+  var _ref3 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2(config) {
+    var fullPath, url, params, fileQueue, _iterator, _step, data, _data, key, value, files;
+
+    return regeneratorRuntime.wrap(function _callee2$(_context2) {
+      while (1) {
+        switch (_context2.prev = _context2.next) {
           case 0:
             fullPath = (0, _buildFullPath["default"])(config.baseURL, config.url);
             url = (0, _buildURL["default"])(fullPath, config.params, config.paramsSerializer);
@@ -102,126 +141,59 @@ var transformConfig = /*#__PURE__*/function () {
             };
 
             if (!_utils["default"].isFormData(config.data)) {
-              _context.next = 52;
+              _context2.next = 15;
               break;
             }
 
+            fileQueue = [];
             params.data.values = {};
-            params.data.files = {};
-            _iteratorNormalCompletion = true;
-            _didIteratorError = false;
-            _context.prev = 8;
-            _iterator = _asyncIterator(config.data);
+            _iterator = _createForOfIteratorHelper(config.data);
+
+            try {
+              for (_iterator.s(); !(_step = _iterator.n()).done;) {
+                data = _step.value;
+                _data = _slicedToArray(data, 2), key = _data[0], value = _data[1];
+
+                if (_utils["default"].isFile(value)) {
+                  fileQueue.push(file2path(value));
+                } else {
+                  params.data.values[key] = value;
+                }
+              }
+            } catch (err) {
+              _iterator.e(err);
+            } finally {
+              _iterator.f();
+            }
+
+            _context2.next = 10;
+            return Promise.all(fileQueue);
 
           case 10:
-            _context.next = 12;
-            return _iterator.next();
-
-          case 12:
-            _step = _context.sent;
-            _iteratorNormalCompletion = _step.done;
-            _context.next = 16;
-            return _step.value;
-
-          case 16:
-            _value = _context.sent;
-
-            if (_iteratorNormalCompletion) {
-              _context.next = 34;
-              break;
-            }
-
-            data = _value;
-            _data = _slicedToArray(data, 2), key = _data[0], value = _data[1];
-
-            if (!_utils["default"].isFile(value)) {
-              _context.next = 30;
-              break;
-            }
-
-            _context.next = 23;
-            return file2Base64(value);
-
-          case 23:
-            base64Data = _context.sent;
-            _context.next = 26;
-            return writeFile({
-              path: "cache://".concat(value.name),
-              data: base64Data
-            });
-
-          case 26:
-            path = _context.sent;
-            params.data.files[key] = path;
-            _context.next = 31;
+            files = _context2.sent;
+            params.data.files = files.reduce(function (result, current) {
+              return _objectSpread(_objectSpread({}, result), {}, _defineProperty({}, current.name, current.path));
+            }, {});
+            delete params.headers['Content-Type'];
+            _context2.next = 16;
             break;
 
-          case 30:
-            params.data.values[key] = value;
-
-          case 31:
-            _iteratorNormalCompletion = true;
-            _context.next = 10;
-            break;
-
-          case 34:
-            _context.next = 40;
-            break;
-
-          case 36:
-            _context.prev = 36;
-            _context.t0 = _context["catch"](8);
-            _didIteratorError = true;
-            _iteratorError = _context.t0;
-
-          case 40:
-            _context.prev = 40;
-            _context.prev = 41;
-
-            if (!(!_iteratorNormalCompletion && _iterator["return"] != null)) {
-              _context.next = 45;
-              break;
-            }
-
-            _context.next = 45;
-            return _iterator["return"]();
-
-          case 45:
-            _context.prev = 45;
-
-            if (!_didIteratorError) {
-              _context.next = 48;
-              break;
-            }
-
-            throw _iteratorError;
-
-          case 48:
-            return _context.finish(45);
-
-          case 49:
-            return _context.finish(40);
-
-          case 50:
-            _context.next = 53;
-            break;
-
-          case 52:
+          case 15:
             params.data.body = config.data;
 
-          case 53:
-            return _context.abrupt("return", params);
+          case 16:
+            return _context2.abrupt("return", params);
 
-          case 54:
+          case 17:
           case "end":
-            return _context.stop();
+            return _context2.stop();
         }
       }
-    }, _callee, null, [[8, 36, 40, 50], [41,, 45, 49]]);
+    }, _callee2);
   }));
 
-  return function transformConfig(_x) {
-    return _ref2.apply(this, arguments);
+  return function transformConfig(_x2) {
+    return _ref3.apply(this, arguments);
   };
 }();
 
@@ -264,25 +236,29 @@ var transformError = function transformError(error, reject, config) {
   }
 };
 
-var _default = function _default(config) {
-  if (!window.api) {
-    return (0, _axios["default"])(_objectSpread(_objectSpread({}, config), {}, {
-      adapter: _xhr["default"]
-    }));
-  }
+var _default = /*#__PURE__*/function () {
+  var _ref4 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee3(config) {
+    var ajaxParams;
+    return regeneratorRuntime.wrap(function _callee3$(_context3) {
+      while (1) {
+        switch (_context3.prev = _context3.next) {
+          case 0:
+            if (window.api) {
+              _context3.next = 2;
+              break;
+            }
 
-  return new Promise( /*#__PURE__*/function () {
-    var _ref3 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2(resolve, reject) {
-      var ajaxParams;
-      return regeneratorRuntime.wrap(function _callee2$(_context2) {
-        while (1) {
-          switch (_context2.prev = _context2.next) {
-            case 0:
-              _context2.next = 2;
-              return transformConfig(config);
+            return _context3.abrupt("return", (0, _axios["default"])(_objectSpread(_objectSpread({}, config), {}, {
+              adapter: _xhr["default"]
+            })));
 
-            case 2:
-              ajaxParams = _context2.sent;
+          case 2:
+            _context3.next = 4;
+            return transformConfig(config);
+
+          case 4:
+            ajaxParams = _context3.sent;
+            return _context3.abrupt("return", new Promise(function (resolve, reject) {
               window.api.ajax(ajaxParams, function (ret, err) {
                 if (err) {
                   transformError(err, reject, config);
@@ -302,19 +278,19 @@ var _default = function _default(config) {
                   reject(cancel);
                 });
               }
+            }));
 
-            case 5:
-            case "end":
-              return _context2.stop();
-          }
+          case 6:
+          case "end":
+            return _context3.stop();
         }
-      }, _callee2);
-    }));
+      }
+    }, _callee3);
+  }));
 
-    return function (_x2, _x3) {
-      return _ref3.apply(this, arguments);
-    };
-  }());
-};
+  return function (_x3) {
+    return _ref4.apply(this, arguments);
+  };
+}();
 
 exports["default"] = _default;
