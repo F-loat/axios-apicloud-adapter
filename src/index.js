@@ -108,12 +108,14 @@ const transformError = (error, reject, config) => {
   }
 }
 
-export default (config) => {
+export default async (config) => {
   if (!window.api) {
     return axios({ ...config, adapter: xhrAdapter })
   }
-  return new Promise(async (resolve, reject) => {
-    const ajaxParams = await transformConfig(config)
+
+  const ajaxParams = await transformConfig(config)
+
+  return new Promise((resolve, reject) => {
     window.api.ajax(ajaxParams, (ret, err) => {
       if (err) {
         transformError(err, reject, config)
