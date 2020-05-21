@@ -56,8 +56,8 @@ const transformConfig = async (config) => {
     for await (const data of config.data) {
       const [key, value] = data
       if (utils.isFile(value)) {
-        const data = await file2Base64(value)
-        const path = await writeFile({ path: `cache://${value.name}`, data })
+        const base64Data = await file2Base64(value)
+        const path = await writeFile({ path: `cache://${value.name}`, data: base64Data })
         params.data.files[key] = path
       } else {
         params.data.values[key] = value
@@ -112,8 +112,8 @@ export default (config) => {
   if (!window.api) {
     return axios({ ...config, adapter: xhrAdapter })
   }
-  return new Promise((resolve, reject) => {
-    const ajaxParams = transformConfig(config)
+  return new Promise(async (resolve, reject) => {
+    const ajaxParams = await transformConfig(config)
     window.api.ajax(ajaxParams, (ret, err) => {
       if (err) {
         transformError(err, reject, config)
