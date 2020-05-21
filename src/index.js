@@ -28,6 +28,13 @@ const file2Base64 = (file) => {
   })
 }
 
+const file2path = async (file) => {
+  const { name } = file
+  const base64 = await file2Base64(file)
+  const path = await writeFile({ path: `cache://${name}`, data: base64 })
+  return { name, path }
+}
+
 const transformConfig = async (config) => {
   const fullPath = buildFullPath(config.baseURL, config.url)
   const url = buildURL(fullPath, config.params, config.paramsSerializer)
@@ -51,18 +58,23 @@ const transformConfig = async (config) => {
   }
 
   if (utils.isFormData(config.data)) {
+    const fileQueue = []
     params.data.values = {}
-    params.data.files = {}
-    for await (const data of config.data) {
+
+    for (const data of config.data) {
       const [key, value] = data
       if (utils.isFile(value)) {
-        const base64Data = await file2Base64(value)
-        const path = await writeFile({ path: `cache://${value.name}`, data: base64Data })
-        params.data.files[key] = path
+        fileQueue.push(file2path(value))
       } else {
         params.data.values[key] = value
       }
     }
+
+    const files = await Promise.all(fileQueue)
+
+    params.data.files = files.reduce((result, current) => {
+      return { ...result, [current.name]: current.path }
+    }, {})
   } else {
     params.data.body = config.data
   }
