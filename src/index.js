@@ -75,6 +75,8 @@ const transformConfig = async (config) => {
     params.data.files = files.reduce((result, current) => {
       return { ...result, [current.name]: current.path }
     }, {})
+
+    delete params.headers['Content-Type']
   } else {
     params.data.body = config.data
   }
